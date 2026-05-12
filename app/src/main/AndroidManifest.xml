@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ReceiptFlow">
         <activity
+            android:name=".AccountantSelect"
+            android:exported="false" />
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+        <activity
             android:name=".ManagerUsersManagement"
             android:exported="false" />
         <activity

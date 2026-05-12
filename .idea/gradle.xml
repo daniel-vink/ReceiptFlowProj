@@ -8,8 +8,8 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
+            <option value="/media/ssd/android-studio/Projects/Git/ReceiptFlowMine" />
+            <option value="/media/ssd/android-studio/Projects/Git/ReceiptFlowMine/app" />
           </set>
         </option>
       </GradleProjectSettings>
