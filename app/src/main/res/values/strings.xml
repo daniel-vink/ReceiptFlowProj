@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ReceiptFlow</string>
+    <string name="log_in">Log in</string>
+    <string name="create_new_account">Create new account</string>
+    <string name="password">Password</string>
+    <string name="e_mail">E-mail</string>
+    <string name="e_mail_or_password_are_incorrect">E-mail or password are incorrect!</string>
+    <string name="welcome">Welcome to ReceiptFlow!</string>
+</resources>
