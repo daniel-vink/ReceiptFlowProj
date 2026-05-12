@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "737372915585",
+    "project_id": "receiptflow-43703",
+    "storage_bucket": "receiptflow-43703.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:737372915585:android:88a4c44221ab0e209c8a80",
+        "android_client_info": {
+          "package_name": "com.example.receiptflow"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZwBTIQ9TqDArnFDQypGo47XJE9SoYbPU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
