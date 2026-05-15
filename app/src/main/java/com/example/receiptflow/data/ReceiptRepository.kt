@@ -36,4 +36,15 @@ class ReceiptRepository {
             Result.failure(e)
         }
     }
+
+    suspend fun saveReceipt(receipt: Receipt): Result<Unit> {
+        return try {
+            val ref = db.collection("receipts").document()
+            val finalReceipt = receipt.copy(id = ref.id)
+            ref.set(finalReceipt).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }
