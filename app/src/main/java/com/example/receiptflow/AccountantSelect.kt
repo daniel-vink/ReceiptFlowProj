@@ -14,7 +14,9 @@ import com.example.receiptflow.adapters.CustomerAdapter
 import com.example.receiptflow.adapters.ReceiptAdapter
 import com.example.receiptflow.data.ReceiptRepository
 import com.example.receiptflow.databinding.ActivityAccountantSelectBinding
+import com.example.receiptflow.models.Receipt
 import com.example.receiptflow.models.User
+import com.example.receiptflow.utils.PdfGenerator
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -23,6 +25,7 @@ class AccountantSelect : AppCompatActivity() {
     private lateinit var binding: ActivityAccountantSelectBinding
     private val repository = ReceiptRepository()
     private val auth = FirebaseAuth.getInstance()
+    private lateinit var pdfGenerator: PdfGenerator
     
     private var selectedCustomer: User? = null
     private var selectedYear: Int = Calendar.getInstance().get(Calendar.YEAR)
@@ -30,12 +33,15 @@ class AccountantSelect : AppCompatActivity() {
 
     private lateinit var customerAdapter: CustomerAdapter
     private lateinit var receiptAdapter: ReceiptAdapter
+    private var currentReceipts: List<Receipt> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAccountantSelectBinding.inflate(layoutInflater)
         setContentView(binding.root)
         enableEdgeToEdge()
+
+        pdfGenerator = PdfGenerator(this)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -45,7 +51,26 @@ class AccountantSelect : AppCompatActivity() {
 
         setupRecyclerViews()
         setupSpinners()
+        setupDownloadButton()
         fetchCustomers()
+    }
+
+    private fun setupDownloadButton() {
+        binding.buttonDownloadPdf.setOnClickListener {
+            val customerName = selectedCustomer?.displayName ?: "Customer"
+            val fileName = "Receipts_${customerName}_${selectedYear}_${selectedMonth}"
+            
+            binding.progressBar.visibility = View.VISIBLE
+            lifecycleScope.launch {
+                val result = pdfGenerator.generateReceiptsPdf(currentReceipts, fileName)
+                binding.progressBar.visibility = View.GONE
+                result.onSuccess { file ->
+                    Toast.makeText(this@AccountantSelect, "PDF saved to: ${file.absolutePath}", Toast.LENGTH_LONG).show()
+                }.onFailure { e ->
+                    Toast.makeText(this@AccountantSelect, "Failed to generate PDF: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     private fun setupRecyclerViews() {
@@ -103,7 +128,9 @@ class AccountantSelect : AppCompatActivity() {
             val result = repository.getReceiptsForCustomer(customerId, selectedYear, selectedMonth)
             binding.progressBar.visibility = View.GONE
             result.onSuccess { receipts ->
+                currentReceipts = receipts
                 receiptAdapter.updateData(receipts)
+                binding.buttonDownloadPdf.visibility = if (receipts.isNotEmpty()) View.VISIBLE else View.GONE
             }.onFailure { e ->
                 Toast.makeText(this@AccountantSelect, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }

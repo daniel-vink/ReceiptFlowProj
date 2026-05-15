@@ -55,6 +55,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/buttonDownloadPdf"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/stat_sys_download"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
