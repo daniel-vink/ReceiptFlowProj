@@ -13,14 +13,14 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.receiptflow.adapters.ManagerUserAdapter
 import com.example.receiptflow.data.AdminRepository
-import com.example.receiptflow.databinding.ActivityManagerUsersManagementBinding
+import com.example.receiptflow.databinding.ActivityManagerMenuBinding
 import com.example.receiptflow.databinding.DialogAssignAccountantBinding
 import com.example.receiptflow.models.User
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.launch
 
-class ManagerUsersManagement : AppCompatActivity() {
-    private lateinit var binding: ActivityManagerUsersManagementBinding
+class ManagerMenu : AppCompatActivity() {
+    private lateinit var binding: ActivityManagerMenuBinding
     private val repository = AdminRepository()
     private lateinit var adapter: ManagerUserAdapter
     
@@ -29,7 +29,7 @@ class ManagerUsersManagement : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityManagerUsersManagementBinding.inflate(layoutInflater)
+        binding = ActivityManagerMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
         enableEdgeToEdge()
 
@@ -47,6 +47,7 @@ class ManagerUsersManagement : AppCompatActivity() {
     private fun setupRecyclerView() {
         adapter = ManagerUserAdapter(
             users = emptyList(),
+            accountantNames = emptyMap(),
             onAssignClicked = { customer -> showAssignDialog(customer) },
             onDeleteClicked = { user -> showDeleteConfirmation(user) }
         )
@@ -67,16 +68,20 @@ class ManagerUsersManagement : AppCompatActivity() {
     private fun fetchData() {
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
-            if (currentTab == 0) {
-                repository.getAllCustomers().onSuccess { customers ->
-                    adapter.updateData(customers)
-                }.onFailure { showToast("Failed to fetch customers") }
-            } else {
-                repository.getAllAccountants().onSuccess { accountants ->
-                    adapter.updateData(accountants)
-                    allAccountants = accountants
-                }.onFailure { showToast("Failed to fetch accountants") }
-            }
+            // Always fetch accountants first to ensure names are available for mapping
+            repository.getAllAccountants().onSuccess { accountants ->
+                allAccountants = accountants
+                val accMap = accountants.associate { it.uid to it.displayName }
+
+                if (currentTab == 0) {
+                    repository.getAllCustomers().onSuccess { customers ->
+                        adapter.updateData(customers, accMap)
+                    }.onFailure { showToast("Failed to fetch customers") }
+                } else {
+                    adapter.updateData(accountants, accMap)
+                }
+            }.onFailure { showToast("Failed to fetch accountants") }
+
             binding.progressBar.visibility = View.GONE
         }
     }

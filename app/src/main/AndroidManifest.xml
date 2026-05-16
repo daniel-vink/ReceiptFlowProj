@@ -16,16 +16,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ReceiptFlow">
         <activity
-            android:name=".AccountantSelect"
+            android:name=".AccountantMenu"
             android:exported="false" />
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".ManagerUsersManagement"
+            android:name=".ManagerMenu"
             android:exported="false" />
         <activity
-            android:name=".CustomerActionScreen"
+            android:name=".CustomerMenu"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

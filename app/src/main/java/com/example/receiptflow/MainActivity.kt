@@ -57,10 +57,10 @@ class MainActivity : AppCompatActivity() {
 
             result.onSuccess { user ->
                 val nextActivity = when (user.role) {
-                    "customer" -> CustomerActionScreen::class.java
-                    "accountant" -> AccountantSelect::class.java
-                    "admin" -> ManagerUsersManagement::class.java
-                    else -> CustomerActionScreen::class.java
+                    "customer" -> CustomerMenu::class.java
+                    "accountant" -> AccountantMenu::class.java
+                    "admin" -> ManagerMenu::class.java
+                    else -> CustomerMenu::class.java
                 }
                 startActivity(Intent(this@MainActivity, nextActivity))
                 finish()

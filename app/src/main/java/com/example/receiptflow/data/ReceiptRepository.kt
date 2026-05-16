@@ -47,4 +47,24 @@ class ReceiptRepository {
             Result.failure(e)
         }
     }
+
+    suspend fun updateReceiptStatus(receiptId: String, newStatus: String): Result<Unit> {
+        return try {
+            db.collection("receipts").document(receiptId)
+                .update("status", newStatus)
+                .await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun deleteReceipt(receiptId: String): Result<Unit> {
+        return try {
+            db.collection("receipts").document(receiptId).delete().await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

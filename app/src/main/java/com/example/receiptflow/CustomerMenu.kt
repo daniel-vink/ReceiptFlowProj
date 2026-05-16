@@ -20,9 +20,10 @@ import androidx.lifecycle.lifecycleScope
 import com.example.receiptflow.adapters.ReceiptAdapter
 import com.example.receiptflow.data.ReceiptRepository
 import com.example.receiptflow.data.StorageRepository
-import com.example.receiptflow.databinding.ActivityCustomerActionScreenBinding
+import com.example.receiptflow.databinding.ActivityCustomerMenuBinding
 import com.example.receiptflow.databinding.DialogUploadReceiptBinding
 import com.example.receiptflow.models.Receipt
+import com.example.receiptflow.utils.ImageUtils
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -31,8 +32,8 @@ import kotlinx.coroutines.tasks.await
 import java.io.File
 import java.util.Calendar
 
-class CustomerActionScreen : AppCompatActivity() {
-    private lateinit var binding: ActivityCustomerActionScreenBinding
+class CustomerMenu : AppCompatActivity() {
+    private lateinit var binding: ActivityCustomerMenuBinding
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
     private val receiptRepository = ReceiptRepository()
@@ -57,7 +58,7 @@ class CustomerActionScreen : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCustomerActionScreenBinding.inflate(layoutInflater)
+        binding = ActivityCustomerMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
         enableEdgeToEdge()
 
@@ -78,8 +79,43 @@ class CustomerActionScreen : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        adapter = ReceiptAdapter(emptyList())
+        adapter = ReceiptAdapter(
+            receipts = emptyList(),
+            onReceiptClicked = { receipt -> ImageUtils.showFullImage(this, receipt.storageUrl) },
+            onLongClicked = { receipt -> showDeleteConfirmation(receipt) }
+        )
         binding.recyclerViewMyReceipts.adapter = adapter
+    }
+
+    private fun showDeleteConfirmation(receipt: Receipt) {
+        AlertDialog.Builder(this)
+            .setTitle("Delete Receipt")
+            .setMessage("Are you sure you want to delete this receipt?")
+            .setPositiveButton("Delete") { _, _ ->
+                deleteReceipt(receipt)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun deleteReceipt(receipt: Receipt) {
+        binding.progressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            // 1. Delete from Storage
+            storageRepository.deleteImage(receipt.storageUrl)
+            
+            // 2. Delete from Firestore
+            val result = receiptRepository.deleteReceipt(receipt.id)
+            
+            binding.progressBar.visibility = View.GONE
+            
+            result.onSuccess {
+                Toast.makeText(this@CustomerMenu, "Receipt deleted", Toast.LENGTH_SHORT).show()
+                fetchMyReceipts()
+            }.onFailure { e ->
+                Toast.makeText(this@CustomerMenu, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun fetchAccountantIdAndReceipts() {
@@ -92,7 +128,7 @@ class CustomerActionScreen : AppCompatActivity() {
                 fetchMyReceipts()
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
-                Toast.makeText(this@CustomerActionScreen, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@CustomerMenu, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -109,7 +145,7 @@ class CustomerActionScreen : AppCompatActivity() {
             result.onSuccess { receipts ->
                 adapter.updateData(receipts)
             }.onFailure { e ->
-                Toast.makeText(this@CustomerActionScreen, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@CustomerMenu, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -180,14 +216,14 @@ class CustomerActionScreen : AppCompatActivity() {
                 val saveResult = receiptRepository.saveReceipt(receipt)
                 binding.progressBar.visibility = View.GONE
                 saveResult.onSuccess {
-                    Toast.makeText(this@CustomerActionScreen, "Upload successful!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@CustomerMenu, "Upload successful!", Toast.LENGTH_SHORT).show()
                     fetchMyReceipts()
                 }.onFailure { e ->
-                    Toast.makeText(this@CustomerActionScreen, "Failed to save metadata: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@CustomerMenu, "Failed to save metadata: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }.onFailure { e ->
                 binding.progressBar.visibility = View.GONE
-                Toast.makeText(this@CustomerActionScreen, "Upload failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@CustomerMenu, "Upload failed: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }

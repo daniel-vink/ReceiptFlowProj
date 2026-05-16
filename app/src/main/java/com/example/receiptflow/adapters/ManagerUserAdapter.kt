@@ -9,6 +9,7 @@ import com.example.receiptflow.models.User
 
 class ManagerUserAdapter(
     private var users: List<User>,
+    private var accountantNames: Map<String, String> = emptyMap(),
     private val onAssignClicked: (User) -> Unit,
     private val onDeleteClicked: (User) -> Unit
 ) : RecyclerView.Adapter<ManagerUserAdapter.UserViewHolder>() {
@@ -23,12 +24,15 @@ class ManagerUserAdapter(
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = users[position]
         holder.binding.textViewUserName.text = user.displayName
+        holder.binding.textViewUserEmail.text = user.email
         
         if (user.role == "customer") {
-            holder.binding.textViewUserDetail.text = "Accountant ID: ${user.accountantId ?: "None"}"
+            val accName = user.accountantId?.let { accountantNames[it] } ?: "None"
+            holder.binding.textViewUserDetail.text = "Accountant: $accName"
+            holder.binding.textViewUserDetail.visibility = View.VISIBLE
             holder.binding.buttonAssign.visibility = View.VISIBLE
         } else {
-            holder.binding.textViewUserDetail.text = "Role: Accountant"
+            holder.binding.textViewUserDetail.visibility = View.GONE
             holder.binding.buttonAssign.visibility = View.GONE
         }
 
@@ -38,8 +42,9 @@ class ManagerUserAdapter(
 
     override fun getItemCount(): Int = users.size
 
-    fun updateData(newUsers: List<User>) {
+    fun updateData(newUsers: List<User>, newAccountantNames: Map<String, String>) {
         users = newUsers
+        accountantNames = newAccountantNames
         notifyDataSetChanged()
     }
 }

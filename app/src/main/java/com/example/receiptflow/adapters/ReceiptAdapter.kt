@@ -3,13 +3,16 @@ package com.example.receiptflow.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.receiptflow.databinding.ItemReceiptBinding
 import com.example.receiptflow.models.Receipt
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class ReceiptAdapter(
-    private var receipts: List<Receipt>
+    private var receipts: List<Receipt>,
+    private val onReceiptClicked: (Receipt) -> Unit,
+    private val onLongClicked: ((Receipt) -> Unit)? = null
 ) : RecyclerView.Adapter<ReceiptAdapter.ReceiptViewHolder>() {
 
     class ReceiptViewHolder(val binding: ItemReceiptBinding) : RecyclerView.ViewHolder(binding.root)
@@ -27,6 +30,20 @@ class ReceiptAdapter(
         holder.binding.textViewReceiptDate.text = "Date: $dateString"
         holder.binding.textViewReceiptComment.text = receipt.comment
         holder.binding.textViewReceiptStatus.text = "Status: ${receipt.status}"
+
+        // Load small thumbnail preview
+        Glide.with(holder.itemView.context)
+            .load(receipt.storageUrl)
+            .centerCrop()
+            .placeholder(android.R.drawable.ic_menu_gallery)
+            .into(holder.binding.imageViewThumbnail)
+
+        holder.binding.root.setOnClickListener { onReceiptClicked(receipt) }
+        
+        holder.binding.root.setOnLongClickListener {
+            onLongClicked?.invoke(receipt)
+            true
+        }
     }
 
     override fun getItemCount(): Int = receipts.size

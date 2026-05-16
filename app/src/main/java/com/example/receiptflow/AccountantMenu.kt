@@ -6,23 +6,24 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.example.receiptflow.adapters.CustomerAdapter
 import com.example.receiptflow.adapters.ReceiptAdapter
 import com.example.receiptflow.data.ReceiptRepository
-import com.example.receiptflow.databinding.ActivityAccountantSelectBinding
+import com.example.receiptflow.databinding.ActivityAccountantMenuBinding
 import com.example.receiptflow.models.Receipt
 import com.example.receiptflow.models.User
 import com.example.receiptflow.utils.PdfGenerator
+import com.example.receiptflow.utils.ImageUtils
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
-class AccountantSelect : AppCompatActivity() {
-    private lateinit var binding: ActivityAccountantSelectBinding
+class AccountantMenu : AppCompatActivity() {
+    private lateinit var binding: ActivityAccountantMenuBinding
     private val repository = ReceiptRepository()
     private val auth = FirebaseAuth.getInstance()
     private lateinit var pdfGenerator: PdfGenerator
@@ -31,13 +32,14 @@ class AccountantSelect : AppCompatActivity() {
     private var selectedYear: Int = Calendar.getInstance().get(Calendar.YEAR)
     private var selectedMonth: Int = Calendar.getInstance().get(Calendar.MONTH) + 1 // 1-based
 
-    private lateinit var customerAdapter: CustomerAdapter
+    private lateinit var customerAdapter: ArrayAdapter<String>
+    private var customerList: List<User> = emptyList()
     private lateinit var receiptAdapter: ReceiptAdapter
     private var currentReceipts: List<Receipt> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityAccountantSelectBinding.inflate(layoutInflater)
+        binding = ActivityAccountantMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
         enableEdgeToEdge()
 
@@ -65,23 +67,61 @@ class AccountantSelect : AppCompatActivity() {
                 val result = pdfGenerator.generateReceiptsPdf(currentReceipts, fileName)
                 binding.progressBar.visibility = View.GONE
                 result.onSuccess { file ->
-                    Toast.makeText(this@AccountantSelect, "PDF saved to: ${file.absolutePath}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@AccountantMenu, "PDF saved to Downloads folder", Toast.LENGTH_LONG).show()
                 }.onFailure { e ->
-                    Toast.makeText(this@AccountantSelect, "Failed to generate PDF: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@AccountantMenu, "Failed to generate PDF: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
     private fun setupRecyclerViews() {
-        customerAdapter = CustomerAdapter(emptyList()) { customer ->
-            selectedCustomer = customer
-            fetchReceipts()
-        }
-        binding.recyclerViewCustomers.adapter = customerAdapter
+        // Customer Spinner setup
+        customerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, mutableListOf())
+        binding.spinnerCustomers.adapter = customerAdapter
 
-        receiptAdapter = ReceiptAdapter(emptyList())
+        binding.spinnerCustomers.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (customerList.isNotEmpty()) {
+                    selectedCustomer = customerList[position]
+                    fetchReceipts()
+                }
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        // Receipt RecyclerView setup
+        receiptAdapter = ReceiptAdapter(
+            receipts = emptyList(),
+            onReceiptClicked = { receipt -> ImageUtils.showFullImage(this, receipt.storageUrl) },
+            onLongClicked = { receipt -> showStatusUpdateDialog(receipt) }
+        )
         binding.recyclerViewReceipts.adapter = receiptAdapter
+    }
+
+    private fun showStatusUpdateDialog(receipt: Receipt) {
+        val statuses = arrayOf("Image unclear", "Not relevant", "Approved")
+        AlertDialog.Builder(this)
+            .setTitle("Update Status")
+            .setItems(statuses) { _, which ->
+                val newStatus = statuses[which]
+                updateStatus(receipt.id, newStatus)
+            }
+            .show()
+    }
+
+    private fun updateStatus(receiptId: String, newStatus: String) {
+        binding.progressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            val result = repository.updateReceiptStatus(receiptId, newStatus)
+            binding.progressBar.visibility = View.GONE
+            result.onSuccess {
+                Toast.makeText(this@AccountantMenu, "Status updated to: $newStatus", Toast.LENGTH_SHORT).show()
+                fetchReceipts() // Refresh the list
+            }.onFailure { e ->
+                Toast.makeText(this@AccountantMenu, "Update failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun setupSpinners() {
@@ -114,9 +154,17 @@ class AccountantSelect : AppCompatActivity() {
             val result = repository.getAssignedCustomers(currentUserId)
             binding.progressBar.visibility = View.GONE
             result.onSuccess { customers ->
-                customerAdapter.updateData(customers)
+                customerList = customers
+                customerAdapter.clear()
+                customerAdapter.addAll(customers.map { it.displayName })
+                customerAdapter.notifyDataSetChanged()
+                
+                if (customers.isNotEmpty()) {
+                    selectedCustomer = customers[0]
+                    fetchReceipts()
+                }
             }.onFailure { e ->
-                Toast.makeText(this@AccountantSelect, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@AccountantMenu, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -132,7 +180,7 @@ class AccountantSelect : AppCompatActivity() {
                 receiptAdapter.updateData(receipts)
                 binding.buttonDownloadPdf.visibility = if (receipts.isNotEmpty()) View.VISIBLE else View.GONE
             }.onFailure { e ->
-                Toast.makeText(this@AccountantSelect, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@AccountantMenu, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }

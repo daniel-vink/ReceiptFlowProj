@@ -25,16 +25,28 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textViewUserDetail"
+            android:id="@+id/textViewUserEmail"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Detail: Accountant ID"
+            android:layout_marginTop="2dp"
+            android:text="user@example.com"
             android:textSize="14sp"
             android:textColor="@color/hintColor"
             app:layout_constraintEnd_toStartOf="@+id/buttonDelete"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textViewUserName" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/textViewUserDetail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Detail: Accountant Name"
+            android:textSize="14sp"
+            android:textColor="@color/hintColor"
+            app:layout_constraintEnd_toStartOf="@+id/buttonDelete"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewUserEmail" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonAssign"
