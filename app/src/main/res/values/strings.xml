@@ -13,4 +13,5 @@
     <string name="accountant">Accountant</string>
     <string name="registration_failed">Registration failed</string>
     <string name="all_fields_required">All fields are required</string>
+    <string name="select_customer">Select Customer</string>
 </resources>

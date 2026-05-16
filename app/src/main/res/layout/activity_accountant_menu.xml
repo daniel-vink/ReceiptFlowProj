@@ -8,19 +8,19 @@
     tools:context=".AccountantMenu">
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/titleCustomers"
+        android:id="@+id/accountant_LBL_titleCustomers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
-        android:text="Select Customer"
+        android:text="@string/select_customer"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
-        android:id="@+id/spinnerCustomers"
+        android:id="@+id/accountant_SPNR_customer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
@@ -28,10 +28,10 @@
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleCustomers" />
+        app:layout_constraintTop_toBottomOf="@id/accountant_LBL_titleCustomers" />
 
     <LinearLayout
-        android:id="@+id/layoutFilters"
+        android:id="@+id/accountant_LAYOUT_filters"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
@@ -40,34 +40,35 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/spinnerCustomers">
+        app:layout_constraintTop_toBottomOf="@id/accountant_SPNR_customer">
 
         <Spinner
-            android:id="@+id/spinnerYear"
+            android:id="@+id/accountant_SPNR_year"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
         <Spinner
-            android:id="@+id/spinnerMonth"
+            android:id="@+id/accountant_SPNR_month"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/buttonDownloadPdf"
+            android:id="@+id/accountant_BTN_downloadPdf"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/stat_sys_download"
             android:visibility="gone"
+            app:tint="?attr/colorOnSurface"
             tools:visibility="visible" />
 
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewReceipts"
+        android:id="@+id/accountant_RCV_receipts"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
@@ -75,11 +76,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layoutFilters"
+        app:layout_constraintTop_toBottomOf="@id/accountant_LAYOUT_filters"
         tools:listitem="@layout/item_receipt" />
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/accountant_progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
@@ -87,16 +88,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/textNoData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No receipts found"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layoutFilters" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Mapped Colors for Dark Mode (Brighter variants for better contrast) -->
+    <color name="hintColor">#ebdbb2</color> <!-- Gruvbox FG for high visibility -->
+    <color name="warning">#fb4934</color> <!-- Gruvbox Red Light -->
+</resources>

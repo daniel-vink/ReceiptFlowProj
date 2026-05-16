@@ -58,14 +58,14 @@ class AccountantMenu : AppCompatActivity() {
     }
 
     private fun setupDownloadButton() {
-        binding.buttonDownloadPdf.setOnClickListener {
+        binding.accountantBTNDownloadPdf.setOnClickListener {
             val customerName = selectedCustomer?.displayName ?: "Customer"
             val fileName = "Receipts_${customerName}_${selectedYear}_${selectedMonth}"
             
-            binding.progressBar.visibility = View.VISIBLE
+            binding.accountantProgressBar.visibility = View.VISIBLE
             lifecycleScope.launch {
                 val result = pdfGenerator.generateReceiptsPdf(currentReceipts, fileName)
-                binding.progressBar.visibility = View.GONE
+                binding.accountantProgressBar.visibility = View.GONE
                 result.onSuccess { file ->
                     Toast.makeText(this@AccountantMenu, "PDF saved to Downloads folder", Toast.LENGTH_LONG).show()
                 }.onFailure { e ->
@@ -78,9 +78,9 @@ class AccountantMenu : AppCompatActivity() {
     private fun setupRecyclerViews() {
         // Customer Spinner setup
         customerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, mutableListOf())
-        binding.spinnerCustomers.adapter = customerAdapter
+        binding.accountantSPNRCustomer.adapter = customerAdapter
 
-        binding.spinnerCustomers.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.accountantSPNRCustomer.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (customerList.isNotEmpty()) {
                     selectedCustomer = customerList[position]
@@ -96,7 +96,7 @@ class AccountantMenu : AppCompatActivity() {
             onReceiptClicked = { receipt -> ImageUtils.showFullImage(this, receipt.storageUrl) },
             onLongClicked = { receipt -> showStatusUpdateDialog(receipt) }
         )
-        binding.recyclerViewReceipts.adapter = receiptAdapter
+        binding.accountantRCVReceipts.adapter = receiptAdapter
     }
 
     private fun showStatusUpdateDialog(receipt: Receipt) {
@@ -111,10 +111,10 @@ class AccountantMenu : AppCompatActivity() {
     }
 
     private fun updateStatus(receiptId: String, newStatus: String) {
-        binding.progressBar.visibility = View.VISIBLE
+        binding.accountantProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             val result = repository.updateReceiptStatus(receiptId, newStatus)
-            binding.progressBar.visibility = View.GONE
+            binding.accountantProgressBar.visibility = View.GONE
             result.onSuccess {
                 Toast.makeText(this@AccountantMenu, "Status updated to: $newStatus", Toast.LENGTH_SHORT).show()
                 fetchReceipts() // Refresh the list
@@ -128,31 +128,31 @@ class AccountantMenu : AppCompatActivity() {
         val years = (2020..2030).map { it.toString() }
         val months = (1..12).map { it.toString() }
 
-        binding.spinnerYear.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, years)
-        binding.spinnerMonth.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, months)
+        binding.accountantSPNRYear.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, years)
+        binding.accountantSPNRMonth.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, months)
 
-        binding.spinnerYear.setSelection(years.indexOf(selectedYear.toString()))
-        binding.spinnerMonth.setSelection(selectedMonth - 1)
+        binding.accountantSPNRYear.setSelection(years.indexOf(selectedYear.toString()))
+        binding.accountantSPNRMonth.setSelection(selectedMonth - 1)
 
         val onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                selectedYear = binding.spinnerYear.selectedItem.toString().toInt()
-                selectedMonth = binding.spinnerMonth.selectedItem.toString().toInt()
+                selectedYear = binding.accountantSPNRYear.selectedItem.toString().toInt()
+                selectedMonth = binding.accountantSPNRMonth.selectedItem.toString().toInt()
                 fetchReceipts()
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        binding.spinnerYear.onItemSelectedListener = onItemSelectedListener
-        binding.spinnerMonth.onItemSelectedListener = onItemSelectedListener
+        binding.accountantSPNRYear.onItemSelectedListener = onItemSelectedListener
+        binding.accountantSPNRMonth.onItemSelectedListener = onItemSelectedListener
     }
 
     private fun fetchCustomers() {
         val currentUserId = auth.currentUser?.uid ?: return
-        binding.progressBar.visibility = View.VISIBLE
+        binding.accountantProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             val result = repository.getAssignedCustomers(currentUserId)
-            binding.progressBar.visibility = View.GONE
+            binding.accountantProgressBar.visibility = View.GONE
             result.onSuccess { customers ->
                 customerList = customers
                 customerAdapter.clear()
@@ -171,14 +171,14 @@ class AccountantMenu : AppCompatActivity() {
 
     private fun fetchReceipts() {
         val customerId = selectedCustomer?.uid ?: return
-        binding.progressBar.visibility = View.VISIBLE
+        binding.accountantProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             val result = repository.getReceiptsForCustomer(customerId, selectedYear, selectedMonth)
-            binding.progressBar.visibility = View.GONE
+            binding.accountantProgressBar.visibility = View.GONE
             result.onSuccess { receipts ->
                 currentReceipts = receipts
                 receiptAdapter.updateData(receipts)
-                binding.buttonDownloadPdf.visibility = if (receipts.isNotEmpty()) View.VISIBLE else View.GONE
+                binding.accountantBTNDownloadPdf.visibility = if (receipts.isNotEmpty()) View.VISIBLE else View.GONE
             }.onFailure { e ->
                 Toast.makeText(this@AccountantMenu, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }

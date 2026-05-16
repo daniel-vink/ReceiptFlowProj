@@ -1,8 +1,23 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- Base application theme (Light Mode) -->
     <style name="Base.Theme.ReceiptFlow" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/gruvbox_light_green</item>
+        <item name="colorOnPrimary">@color/gruvbox_light_bg</item>
+        <item name="colorSecondary">@color/gruvbox_light_blue</item>
+        <item name="colorOnSecondary">@color/gruvbox_light_bg</item>
+        <item name="colorTertiary">@color/gruvbox_light_aqua</item>
+        <item name="colorOnTertiary">@color/gruvbox_light_bg</item>
+
+        <item name="android:windowBackground">@color/gruvbox_light_bg</item>
+        <item name="colorSurface">@color/gruvbox_light_bg_soft</item>
+        <item name="colorOnSurface">@color/gruvbox_light_fg</item>
+        <item name="colorSurfaceVariant">@color/gruvbox_light_bg_soft</item>
+        <item name="colorOnSurfaceVariant">@color/gruvbox_light_fg</item>
+        <item name="colorSurfaceContainer">@color/gruvbox_light_bg_soft</item>
+
+        <item name="colorError">@color/gruvbox_light_red</item>
+        <item name="colorOnError">@color/gruvbox_light_bg</item>
+        <item name="colorOutline">@color/gruvbox_light_gray</item>
     </style>
 
     <style name="Theme.ReceiptFlow" parent="Base.Theme.ReceiptFlow" />
