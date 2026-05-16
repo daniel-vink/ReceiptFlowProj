@@ -99,7 +99,7 @@ class CustomerMenu : AppCompatActivity() {
     }
 
     private fun deleteReceipt(receipt: Receipt) {
-        binding.progressBar.visibility = View.VISIBLE
+        binding.customerProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             // 1. Delete from Storage
             storageRepository.deleteImage(receipt.storageUrl)
@@ -107,7 +107,7 @@ class CustomerMenu : AppCompatActivity() {
             // 2. Delete from Firestore
             val result = receiptRepository.deleteReceipt(receipt.id)
             
-            binding.progressBar.visibility = View.GONE
+            binding.customerProgressBar.visibility = View.GONE
             
             result.onSuccess {
                 Toast.makeText(this@CustomerMenu, "Receipt deleted", Toast.LENGTH_SHORT).show()
@@ -120,14 +120,14 @@ class CustomerMenu : AppCompatActivity() {
 
     private fun fetchAccountantIdAndReceipts() {
         val uid = auth.currentUser?.uid ?: return
-        binding.progressBar.visibility = View.VISIBLE
+        binding.customerProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
                 val doc = db.collection("users").document(uid).get().await()
                 accountantId = doc.getString("accountantId")
                 fetchMyReceipts()
             } catch (e: Exception) {
-                binding.progressBar.visibility = View.GONE
+                binding.customerProgressBar.visibility = View.GONE
                 Toast.makeText(this@CustomerMenu, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
@@ -141,7 +141,7 @@ class CustomerMenu : AppCompatActivity() {
 
         lifecycleScope.launch {
             val result = receiptRepository.getReceiptsForCustomer(uid, year, month)
-            binding.progressBar.visibility = View.GONE
+            binding.customerProgressBar.visibility = View.GONE
             result.onSuccess { receipts ->
                 adapter.updateData(receipts)
             }.onFailure { e ->
@@ -200,7 +200,7 @@ class CustomerMenu : AppCompatActivity() {
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH) + 1
 
-        binding.progressBar.visibility = View.VISIBLE
+        binding.customerProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             val uploadResult = storageRepository.uploadReceiptImage(uri, uid, year, month)
             uploadResult.onSuccess { url ->
@@ -214,7 +214,7 @@ class CustomerMenu : AppCompatActivity() {
                     comment = comment
                 )
                 val saveResult = receiptRepository.saveReceipt(receipt)
-                binding.progressBar.visibility = View.GONE
+                binding.customerProgressBar.visibility = View.GONE
                 saveResult.onSuccess {
                     Toast.makeText(this@CustomerMenu, "Upload successful!", Toast.LENGTH_SHORT).show()
                     fetchMyReceipts()
@@ -222,7 +222,7 @@ class CustomerMenu : AppCompatActivity() {
                     Toast.makeText(this@CustomerMenu, "Failed to save metadata: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }.onFailure { e ->
-                binding.progressBar.visibility = View.GONE
+                binding.customerProgressBar.visibility = View.GONE
                 Toast.makeText(this@CustomerMenu, "Upload failed: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }

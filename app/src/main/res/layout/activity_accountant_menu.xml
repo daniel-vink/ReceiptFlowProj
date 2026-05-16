@@ -80,7 +80,7 @@
         tools:listitem="@layout/item_receipt" />
 
     <ProgressBar
-        android:id="@+id/accountant_progressBar"
+        android:id="@+id/customer_progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
