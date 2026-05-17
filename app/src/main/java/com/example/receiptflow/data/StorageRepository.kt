@@ -6,15 +6,17 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import androidx.exifinterface.media.ExifInterface
 import android.net.Uri
+import com.example.receiptflow.data.interfaces.IStorageRepository
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
 import java.util.UUID
+import androidx.core.graphics.scale
 
-class StorageRepository(private val context: Context) {
+class StorageRepository(private val context: Context) : IStorageRepository {
     private val storage = FirebaseStorage.getInstance()
 
-    suspend fun uploadReceiptImage(uri: Uri, customerId: String, year: Int, month: Int): Result<String> {
+    override suspend fun uploadReceiptImage(uri: Uri, customerId: String, year: Int, month: Int): Result<String> {
         return try {
             val compressedData = compressImage(uri) ?: throw Exception("Compression failed")
             
@@ -34,10 +36,8 @@ class StorageRepository(private val context: Context) {
         val inputStream = context.contentResolver.openInputStream(uri)
         var originalBitmap = BitmapFactory.decodeStream(inputStream)
         
-        // Fix rotation based on EXIF
         originalBitmap = rotateImageIfRequired(originalBitmap, uri)
         
-        // 1. Scale down if too large (Optimized for balance between detail and storage)
         val maxSize = 2000
         var width = originalBitmap.width
         var height = originalBitmap.height
@@ -53,9 +53,8 @@ class StorageRepository(private val context: Context) {
             }
         }
         
-        val scaledBitmap = Bitmap.createScaledBitmap(originalBitmap, width, height, true)
+        val scaledBitmap = originalBitmap.scale(width, height)
         
-        // 2. Compress quality (85% is the 'sweet spot' for storage vs clarity)
         val outputStream = ByteArrayOutputStream()
         scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 85, outputStream)
         
@@ -81,7 +80,7 @@ class StorageRepository(private val context: Context) {
         return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
     }
 
-    suspend fun deleteImage(url: String): Result<Unit> {
+    override suspend fun deleteImage(url: String): Result<Unit> {
         return try {
             storage.getReferenceFromUrl(url).delete().await()
             Result.success(Unit)

@@ -1,6 +1,7 @@
 package com.example.receiptflow
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -20,6 +21,8 @@ import androidx.lifecycle.lifecycleScope
 import com.example.receiptflow.adapters.ReceiptAdapter
 import com.example.receiptflow.data.ReceiptRepository
 import com.example.receiptflow.data.StorageRepository
+import com.example.receiptflow.data.interfaces.IReceiptRepository
+import com.example.receiptflow.data.interfaces.IStorageRepository
 import com.example.receiptflow.databinding.ActivityCustomerMenuBinding
 import com.example.receiptflow.databinding.DialogUploadReceiptBinding
 import com.example.receiptflow.models.Receipt
@@ -36,8 +39,8 @@ class CustomerMenu : AppCompatActivity() {
     private lateinit var binding: ActivityCustomerMenuBinding
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
-    private val receiptRepository = ReceiptRepository()
-    private lateinit var storageRepository: StorageRepository
+    private val receiptRepository: IReceiptRepository = ReceiptRepository()
+    private lateinit var storageRepository: IStorageRepository
     private lateinit var adapter: ReceiptAdapter
 
     private var tempImageUri: Uri? = null
@@ -73,9 +76,26 @@ class CustomerMenu : AppCompatActivity() {
         setupRecyclerView()
         fetchAccountantIdAndReceipts()
 
-        binding.fabAddReceipt.setOnClickListener {
+        binding.customerFABAddReceipt.setOnClickListener {
             showImageSourceOptions()
         }
+
+        binding.customerBTNLogout.setOnClickListener {
+            performLogout()
+        }
+    }
+
+    private fun performLogout() {
+        AlertDialog.Builder(this)
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to logout?")
+            .setPositiveButton("Logout") { _, _ ->
+                auth.signOut()
+                startActivity(Intent(this, MainActivity::class.java))
+                finishAffinity()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun setupRecyclerView() {
@@ -84,7 +104,7 @@ class CustomerMenu : AppCompatActivity() {
             onReceiptClicked = { receipt -> ImageUtils.showFullImage(this, receipt.storageUrl) },
             onLongClicked = { receipt -> showDeleteConfirmation(receipt) }
         )
-        binding.recyclerViewMyReceipts.adapter = adapter
+        binding.customerRVReceipts.adapter = adapter
     }
 
     private fun showDeleteConfirmation(receipt: Receipt) {
@@ -180,12 +200,12 @@ class CustomerMenu : AppCompatActivity() {
 
     private fun showUploadDialog(uri: Uri) {
         val dialogBinding = DialogUploadReceiptBinding.inflate(LayoutInflater.from(this))
-        dialogBinding.imageViewPreview.setImageURI(uri)
+        dialogBinding.uploadIMGPreview.setImageURI(uri)
 
         AlertDialog.Builder(this)
             .setView(dialogBinding.root)
             .setPositiveButton("Upload") { _, _ ->
-                val comment = dialogBinding.editTextComment.text.toString()
+                val comment = dialogBinding.uploadETComment.text.toString()
                 uploadReceipt(uri, comment)
             }
             .setNegativeButton("Cancel", null)

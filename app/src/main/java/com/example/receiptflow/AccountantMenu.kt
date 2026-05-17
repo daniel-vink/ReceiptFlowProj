@@ -1,5 +1,6 @@
 package com.example.receiptflow
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -13,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.receiptflow.adapters.ReceiptAdapter
 import com.example.receiptflow.data.ReceiptRepository
+import com.example.receiptflow.data.interfaces.IReceiptRepository
 import com.example.receiptflow.databinding.ActivityAccountantMenuBinding
 import com.example.receiptflow.models.Receipt
 import com.example.receiptflow.models.User
@@ -24,7 +26,7 @@ import java.util.Calendar
 
 class AccountantMenu : AppCompatActivity() {
     private lateinit var binding: ActivityAccountantMenuBinding
-    private val repository = ReceiptRepository()
+    private val repository: IReceiptRepository = ReceiptRepository()
     private val auth = FirebaseAuth.getInstance()
     private lateinit var pdfGenerator: PdfGenerator
     
@@ -55,6 +57,23 @@ class AccountantMenu : AppCompatActivity() {
         setupSpinners()
         setupDownloadButton()
         fetchCustomers()
+
+        binding.accountantBTNLogout.setOnClickListener {
+            performLogout()
+        }
+    }
+
+    private fun performLogout() {
+        AlertDialog.Builder(this)
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to logout?")
+            .setPositiveButton("Logout") { _, _ ->
+                auth.signOut()
+                startActivity(Intent(this, MainActivity::class.java))
+                finishAffinity()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun setupDownloadButton() {
@@ -96,7 +115,7 @@ class AccountantMenu : AppCompatActivity() {
             onReceiptClicked = { receipt -> ImageUtils.showFullImage(this, receipt.storageUrl) },
             onLongClicked = { receipt -> showStatusUpdateDialog(receipt) }
         )
-        binding.accountantRCVReceipts.adapter = receiptAdapter
+        binding.accountantRVReceipts.adapter = receiptAdapter
     }
 
     private fun showStatusUpdateDialog(receipt: Receipt) {

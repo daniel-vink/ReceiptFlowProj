@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ReceiptFlow</string>
     <string name="log_in">Log in</string>
-    <string name="create_new_account">Create new account</string>
+    <string name="create_account">Create account</string>
     <string name="password">Password</string>
     <string name="e_mail">E-mail</string>
     <string name="e_mail_or_password_are_incorrect">E-mail or password are incorrect!</string>
@@ -14,4 +14,17 @@
     <string name="registration_failed">Registration failed</string>
     <string name="all_fields_required">All fields are required</string>
     <string name="select_customer">Select Customer</string>
+    <string name="my_uploads">My Uploads</string>
+    <string name="customers">Customers</string>
+    <string name="accountants">Accountants</string>
+    <string name="select_an_accountant_for_customer">Select an accountant for this customer:</string>
+    <string name="assign_accountant">Assign Accountant</string>
+    <string name="upload_receipt">Upload Receipt</string>
+    <string name="add_a_comment_for_the_accountant">Add a comment for the accountant...</string>
+    <string name="user_name">User Name</string>
+    <string name="user_example_com">user@example.com</string>
+    <string name="detail_accountant_name">Detail: Accountant Name</string>
+    <string name="date_default">Date: 2026-01-01</string>
+    <string name="customer_comment_placeholder">Customer comment goes here</string>
+    <string name="status_pending">Status: Pending</string>
 </resources>

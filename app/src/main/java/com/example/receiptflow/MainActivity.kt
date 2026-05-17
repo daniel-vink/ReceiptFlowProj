@@ -9,12 +9,13 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.receiptflow.auth.AuthManager
+import com.example.receiptflow.data.interfaces.IAuthRepository
 import com.example.receiptflow.databinding.ActivityMainBinding
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private val authManager = AuthManager()
+    private val authManager: IAuthRepository = AuthManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,32 +29,32 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        binding.textView.visibility = View.GONE
+        binding.mainLBLError.visibility = View.GONE
 
-        binding.button.setOnClickListener {
+        binding.mainBTNLogin.setOnClickListener {
             performLogin()
         }
 
-        binding.button2.setOnClickListener {
+        binding.mainBTNCreateAccount.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
     }
 
     private fun performLogin() {
-        val email = binding.editTextEmailAddress.text.toString().trim()
-        val password = binding.editTextPassword.text.toString().trim()
+        val email = binding.mainETEmailAddress.text.toString().trim()
+        val password = binding.mainETPassword.text.toString().trim()
 
         if (email.isEmpty() || password.isEmpty()) {
-            binding.textView.visibility = View.VISIBLE
+            binding.mainLBLError.visibility = View.VISIBLE
             return
         }
 
-        binding.textView.visibility = View.GONE
-        binding.button.isEnabled = false
+        binding.mainLBLError.visibility = View.GONE
+        binding.mainBTNLogin.isEnabled = false
 
         lifecycleScope.launch {
             val result = authManager.login(email, password)
-            binding.button.isEnabled = true
+            binding.mainBTNLogin.isEnabled = true
 
             result.onSuccess { user ->
                 val nextActivity = when (user.role) {
@@ -65,7 +66,7 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this@MainActivity, nextActivity))
                 finish()
             }.onFailure {
-                binding.textView.visibility = View.VISIBLE
+                binding.mainLBLError.visibility = View.VISIBLE
             }
         }
     }

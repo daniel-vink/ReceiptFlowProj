@@ -15,7 +15,7 @@
         android:padding="16dp">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/imageViewThumbnail"
+            android:id="@+id/receipt_IMG_thumbnail"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginEnd="16dp"
@@ -30,30 +30,30 @@
             android:orientation="vertical">
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/textViewReceiptDate"
+                android:id="@+id/receipt_LBL_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Date: 2024-05-12"
+                android:text="@string/date_default"
                 android:textSize="12sp"
                 android:textColor="@color/hintColor" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/textViewReceiptComment"
+                android:id="@+id/receipt_LBL_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Customer comment goes here"
+                android:text="@string/customer_comment_placeholder"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:ellipsize="end"
                 android:maxLines="2" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/textViewReceiptStatus"
+                android:id="@+id/receipt_LBL_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Status: Pending"
+                android:text="@string/status_pending"
                 android:textSize="14sp"
                 android:textColor="?attr/colorOnSurface" />
 

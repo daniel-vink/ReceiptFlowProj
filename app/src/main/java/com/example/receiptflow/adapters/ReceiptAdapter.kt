@@ -27,16 +27,16 @@ class ReceiptAdapter(
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
         val dateString = receipt.timestamp?.toDate()?.let { dateFormat.format(it) } ?: "N/A"
         
-        holder.binding.textViewReceiptDate.text = "Date: $dateString"
-        holder.binding.textViewReceiptComment.text = receipt.comment
-        holder.binding.textViewReceiptStatus.text = "Status: ${receipt.status}"
+        holder.binding.receiptLBLDate.text = "Date: $dateString"
+        holder.binding.receiptLBLComment.text = receipt.comment
+        holder.binding.receiptLBLStatus.text = "Status: ${receipt.status}"
 
         // Load small thumbnail preview
         Glide.with(holder.itemView.context)
             .load(receipt.storageUrl)
             .centerCrop()
             .placeholder(android.R.drawable.ic_menu_gallery)
-            .into(holder.binding.imageViewThumbnail)
+            .into(holder.binding.receiptIMGThumbnail)
 
         holder.binding.root.setOnClickListener { onReceiptClicked(receipt) }
         

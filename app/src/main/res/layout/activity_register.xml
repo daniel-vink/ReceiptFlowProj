@@ -9,7 +9,7 @@
     tools:context=".RegisterActivity">
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/titleRegister"
+        android:id="@+id/register_LBL_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/register"
@@ -20,77 +20,75 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/editTextFullName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/register_ET_fullName"
+        android:layout_width="@dimen/editText_width"
+        android:layout_height="@dimen/editText_height"
         android:layout_marginTop="32dp"
         android:hint="@string/full_name"
         android:inputType="textPersonName"
-        android:minHeight="@dimen/editTextHeight"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleRegister" />
+        app:layout_constraintTop_toBottomOf="@id/register_LBL_title" />
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/editTextEmailRegister"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/register_ET_email"
+        android:layout_width="@dimen/editText_width"
+        android:layout_height="@dimen/editText_height"
         android:layout_marginTop="16dp"
         android:hint="@string/e_mail"
         android:inputType="textEmailAddress"
-        android:minHeight="@dimen/editTextHeight"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextFullName" />
+        app:layout_constraintTop_toBottomOf="@id/register_ET_fullName" />
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/editTextPasswordRegister"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/register_ET_password"
+        android:layout_width="@dimen/editText_width"
+        android:layout_height="@dimen/editText_height"
         android:layout_marginTop="16dp"
         android:hint="@string/password"
         android:inputType="textPassword"
-        android:minHeight="@dimen/editTextHeight"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextEmailRegister" />
+        app:layout_constraintTop_toBottomOf="@id/register_ET_email" />
 
     <RadioGroup
-        android:id="@+id/radioGroupRole"
+        android:id="@+id/register_RG_Role"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextPasswordRegister">
+        app:layout_constraintTop_toBottomOf="@id/register_ET_password">
 
         <RadioButton
-            android:id="@+id/radioCustomer"
+            android:id="@+id/register_radioCustomer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="@string/customer" />
 
         <RadioButton
-            android:id="@+id/radioAccountant"
+            android:id="@+id/register_radioAccountant"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/accountant" />
     </RadioGroup>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonRegister"
+        android:id="@+id/register_BTN_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="136dp"
         android:text="@string/register"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/radioGroupRole" />
+        app:layout_constraintTop_toBottomOf="@id/register_RG_Role" />
 
     <ProgressBar
-        android:id="@+id/customer_progressBar"
+        android:id="@+id/register_progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"

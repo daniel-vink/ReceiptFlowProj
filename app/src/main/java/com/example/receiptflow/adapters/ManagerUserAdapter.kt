@@ -1,5 +1,6 @@
 package com.example.receiptflow.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,27 +22,29 @@ class ManagerUserAdapter(
         return UserViewHolder(binding)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = users[position]
-        holder.binding.textViewUserName.text = user.displayName
-        holder.binding.textViewUserEmail.text = user.email
+        holder.binding.userLBLUserName.text = user.displayName
+        holder.binding.userLBLEmail.text = user.email
         
         if (user.role == "customer") {
             val accName = user.accountantId?.let { accountantNames[it] } ?: "None"
-            holder.binding.textViewUserDetail.text = "Accountant: $accName"
-            holder.binding.textViewUserDetail.visibility = View.VISIBLE
-            holder.binding.buttonAssign.visibility = View.VISIBLE
+            holder.binding.userLBLDetails.text = "Accountant: $accName"
+            holder.binding.userLBLDetails.visibility = View.VISIBLE
+            holder.binding.userBTNAssign.visibility = View.VISIBLE
         } else {
-            holder.binding.textViewUserDetail.visibility = View.GONE
-            holder.binding.buttonAssign.visibility = View.GONE
+            holder.binding.userLBLDetails.visibility = View.GONE
+            holder.binding.userBTNAssign.visibility = View.GONE
         }
 
-        holder.binding.buttonAssign.setOnClickListener { onAssignClicked(user) }
-        holder.binding.buttonDelete.setOnClickListener { onDeleteClicked(user) }
+        holder.binding.userBTNAssign.setOnClickListener { onAssignClicked(user) }
+        holder.binding.userBTNDelete.setOnClickListener { onDeleteClicked(user) }
     }
 
     override fun getItemCount(): Int = users.size
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateData(newUsers: List<User>, newAccountantNames: Map<String, String>) {
         users = newUsers
         accountantNames = newAccountantNames

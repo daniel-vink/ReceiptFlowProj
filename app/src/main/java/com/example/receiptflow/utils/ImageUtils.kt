@@ -15,9 +15,9 @@ object ImageUtils {
         Glide.with(context)
             .load(url)
             .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-            .into(dialogBinding.imageViewFull)
+            .into(dialogBinding.previewIMGFull)
 
-        dialogBinding.buttonClose.setOnClickListener {
+        dialogBinding.previewBTNClose.setOnClickListener {
             dialog.dismiss()
         }
 

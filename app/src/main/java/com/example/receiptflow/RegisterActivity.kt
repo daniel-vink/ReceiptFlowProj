@@ -11,12 +11,13 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.receiptflow.auth.AuthManager
+import com.example.receiptflow.data.interfaces.IAuthRepository
 import com.example.receiptflow.databinding.ActivityRegisterBinding
 import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
-    private val authManager = AuthManager()
+    private val authManager: IAuthRepository = AuthManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,29 +31,29 @@ class RegisterActivity : AppCompatActivity() {
             insets
         }
 
-        binding.buttonRegister.setOnClickListener {
+        binding.registerBTNSend.setOnClickListener {
             performRegistration()
         }
     }
 
     private fun performRegistration() {
-        val name = binding.editTextFullName.text.toString().trim()
-        val email = binding.editTextEmailRegister.text.toString().trim()
-        val password = binding.editTextPasswordRegister.text.toString().trim()
-        val role = if (binding.radioCustomer.isChecked) "customer" else "accountant"
+        val name = binding.registerETFullName.text.toString().trim()
+        val email = binding.registerETEmail.text.toString().trim()
+        val password = binding.registerETPassword.text.toString().trim()
+        val role = if (binding.registerRadioCustomer.isChecked) "customer" else "accountant"
 
         if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, getString(R.string.all_fields_required), Toast.LENGTH_SHORT).show()
             return
         }
 
-        binding.progressBar.visibility = View.VISIBLE
-        binding.buttonRegister.isEnabled = false
+        binding.registerProgressBar.visibility = View.VISIBLE
+        binding.registerBTNSend.isEnabled = false
 
         lifecycleScope.launch {
             val result = authManager.register(email, password, name, role)
-            binding.progressBar.visibility = View.GONE
-            binding.buttonRegister.isEnabled = true
+            binding.registerProgressBar.visibility = View.GONE
+            binding.registerBTNSend.isEnabled = true
 
             result.onSuccess {
                 Toast.makeText(this@RegisterActivity, "Success!", Toast.LENGTH_SHORT).show()

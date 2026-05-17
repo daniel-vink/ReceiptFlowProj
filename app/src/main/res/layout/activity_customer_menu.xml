@@ -8,19 +8,32 @@
     tools:context=".CustomerMenu">
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/titleMyReceipts"
+        android:id="@+id/customer_LBL_titleReceipts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
-        android:text="My Uploads"
+        android:text="@string/my_uploads"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/customer_BTN_logout"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/logout"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@id/customer_LBL_titleReceipts"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/customer_LBL_titleReceipts"
+        tools:ignore="SpeakableTextPresentCheck" />
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewMyReceipts"
+        android:id="@+id/customer_RV_receipts"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
@@ -28,19 +41,22 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleMyReceipts"
+        app:layout_constraintTop_toBottomOf="@id/customer_LBL_titleReceipts"
         tools:listitem="@layout/item_receipt" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAddReceipt"
+        android:id="@+id/customer_FAB_addReceipt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="24dp"
+        android:backgroundTint="@color/cardview_light_background"
         android:clickable="true"
+        android:contentDescription="@string/upload_receipt"
         android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_add" />
+        app:tint="@color/black"
+        app:srcCompat="@android:drawable/ic_menu_upload" />
 
     <ProgressBar
         android:id="@+id/customer_progressBar"

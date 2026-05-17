@@ -14,52 +14,52 @@
         android:padding="16dp">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textViewUserName"
+            android:id="@+id/user_LBL_userName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="User Name"
+            android:text="@string/user_name"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/buttonDelete"
+            app:layout_constraintEnd_toStartOf="@+id/user_BTN_delete"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textViewUserEmail"
+            android:id="@+id/user_LBL_email"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="user@example.com"
+            android:text="@string/user_example_com"
             android:textSize="14sp"
             android:textColor="@color/hintColor"
-            app:layout_constraintEnd_toStartOf="@+id/buttonDelete"
+            app:layout_constraintEnd_toStartOf="@+id/user_BTN_delete"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewUserName" />
+            app:layout_constraintTop_toBottomOf="@id/user_LBL_userName" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textViewUserDetail"
+            android:id="@+id/user_LBL_details"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Detail: Accountant Name"
+            android:text="@string/detail_accountant_name"
             android:textSize="14sp"
             android:textColor="@color/hintColor"
-            app:layout_constraintEnd_toStartOf="@+id/buttonDelete"
+            app:layout_constraintEnd_toStartOf="@+id/user_BTN_delete"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewUserEmail" />
+            app:layout_constraintTop_toBottomOf="@id/user_LBL_email" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/buttonAssign"
+            android:id="@+id/user_BTN_assign"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Assign"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewUserDetail" />
+            app:layout_constraintTop_toBottomOf="@id/user_LBL_details" />
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/buttonDelete"
+            android:id="@+id/user_BTN_delete"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"

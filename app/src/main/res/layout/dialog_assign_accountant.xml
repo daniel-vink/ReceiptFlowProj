@@ -8,21 +8,20 @@
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Assign Accountant"
+        android:text="@string/assign_accountant"
         android:textSize="20sp"
         android:textStyle="bold" />
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Select an accountant for this customer:" />
+        android:layout_marginTop="@dimen/default_margin"
+        android:text="@string/select_an_accountant_for_customer" />
 
     <Spinner
-        android:id="@+id/spinnerAccountants"
+        android:id="@+id/assign_SPNR_customer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:minHeight="48dp" />
-
+        android:minHeight="@dimen/editText_height" />
 </LinearLayout>

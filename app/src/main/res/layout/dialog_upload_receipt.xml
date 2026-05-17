@@ -8,12 +8,12 @@
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Upload Receipt"
+        android:text="@string/upload_receipt"
         android:textSize="18sp"
         android:textStyle="bold" />
 
     <ImageView
-        android:id="@+id/imageViewPreview"
+        android:id="@+id/upload_IMG_preview"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_marginTop="16dp"
@@ -21,11 +21,11 @@
         android:background="@color/hintColor" />
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/editTextComment"
+        android:id="@+id/upload_ET_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:hint="Add a comment for the accountant..."
+        android:hint="@string/add_a_comment_for_the_accountant"
         android:minHeight="48dp" />
 
 </LinearLayout>

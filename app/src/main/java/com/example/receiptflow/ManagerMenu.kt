@@ -1,5 +1,6 @@
 package com.example.receiptflow
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,15 +14,18 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.receiptflow.adapters.ManagerUserAdapter
 import com.example.receiptflow.data.AdminRepository
+import com.example.receiptflow.data.interfaces.IAdminRepository
 import com.example.receiptflow.databinding.ActivityManagerMenuBinding
 import com.example.receiptflow.databinding.DialogAssignAccountantBinding
 import com.example.receiptflow.models.User
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 class ManagerMenu : AppCompatActivity() {
     private lateinit var binding: ActivityManagerMenuBinding
-    private val repository = AdminRepository()
+    private val repository: IAdminRepository = AdminRepository()
+    private val auth = FirebaseAuth.getInstance()
     private lateinit var adapter: ManagerUserAdapter
     
     private var allAccountants: List<User> = emptyList()
@@ -42,6 +46,23 @@ class ManagerMenu : AppCompatActivity() {
         setupRecyclerView()
         setupTabs()
         fetchData()
+
+        binding.managerBTNLogout.setOnClickListener {
+            performLogout()
+        }
+    }
+
+    private fun performLogout() {
+        AlertDialog.Builder(this)
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to logout?")
+            .setPositiveButton("Logout") { _, _ ->
+                auth.signOut()
+                startActivity(Intent(this, MainActivity::class.java))
+                finishAffinity()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun setupRecyclerView() {
@@ -51,11 +72,11 @@ class ManagerMenu : AppCompatActivity() {
             onAssignClicked = { customer -> showAssignDialog(customer) },
             onDeleteClicked = { user -> showDeleteConfirmation(user) }
         )
-        binding.recyclerViewUsers.adapter = adapter
+        binding.managerRVUsers.adapter = adapter
     }
 
     private fun setupTabs() {
-        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        binding.managerTABLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 currentTab = tab?.position ?: 0
                 fetchData()
@@ -66,7 +87,7 @@ class ManagerMenu : AppCompatActivity() {
     }
 
     private fun fetchData() {
-        binding.progressBar.visibility = View.VISIBLE
+        binding.managerProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             // Always fetch accountants first to ensure names are available for mapping
             repository.getAllAccountants().onSuccess { accountants ->
@@ -82,7 +103,7 @@ class ManagerMenu : AppCompatActivity() {
                 }
             }.onFailure { showToast("Failed to fetch accountants") }
 
-            binding.progressBar.visibility = View.GONE
+            binding.managerProgressBar.visibility = View.GONE
         }
     }
 
@@ -104,12 +125,12 @@ class ManagerMenu : AppCompatActivity() {
         val dialogBinding = DialogAssignAccountantBinding.inflate(LayoutInflater.from(this))
         val accountantNames = allAccountants.map { it.displayName }
         val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, accountantNames)
-        dialogBinding.spinnerAccountants.adapter = spinnerAdapter
+        dialogBinding.assignSPNRCustomer.adapter = spinnerAdapter
 
         AlertDialog.Builder(this)
             .setView(dialogBinding.root)
             .setPositiveButton("Assign") { _, _ ->
-                val selectedIndex = dialogBinding.spinnerAccountants.selectedItemPosition
+                val selectedIndex = dialogBinding.assignSPNRCustomer.selectedItemPosition
                 val selectedAccountant = allAccountants[selectedIndex]
                 assignAccountant(customer.uid, selectedAccountant.uid)
             }
@@ -118,13 +139,13 @@ class ManagerMenu : AppCompatActivity() {
     }
 
     private fun assignAccountant(customerId: String, accountantId: String) {
-        binding.progressBar.visibility = View.VISIBLE
+        binding.managerProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             repository.assignCustomerToAccountant(customerId, accountantId).onSuccess {
                 showToast("Assignment successful")
                 fetchData()
             }.onFailure { showToast("Assignment failed") }
-            binding.progressBar.visibility = View.GONE
+            binding.managerProgressBar.visibility = View.GONE
         }
     }
 
@@ -140,13 +161,13 @@ class ManagerMenu : AppCompatActivity() {
     }
 
     private fun deleteUser(user: User) {
-        binding.progressBar.visibility = View.VISIBLE
+        binding.managerProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             repository.deleteUser(user.uid, user.role).onSuccess {
                 showToast("User deleted")
                 fetchData()
             }.onFailure { showToast("Failed to delete user") }
-            binding.progressBar.visibility = View.GONE
+            binding.managerProgressBar.visibility = View.GONE
         }
     }
 

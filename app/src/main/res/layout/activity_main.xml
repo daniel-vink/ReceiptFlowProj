@@ -8,11 +8,12 @@
     tools:context=".MainActivity">
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/main_LBL_welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/welcome"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextEmailAddress"
+        app:layout_constraintBottom_toTopOf="@+id/main_ET_emailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,15 +21,14 @@
         app:layout_constraintVertical_bias="0.628" />
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/editTextEmailAddress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/main_ET_emailAddress"
+        android:layout_width="@dimen/editText_width"
+        android:layout_height="@dimen/editText_height"
         android:ems="10"
         android:hint="@string/e_mail"
-        android:textColorHint="@color/hintColor"
         android:inputType="textEmailAddress"
-        android:minHeight="@dimen/editTextHeight"
-        app:layout_constraintBottom_toTopOf="@+id/editTextPassword"
+        android:textColorHint="@color/hintColor"
+        app:layout_constraintBottom_toTopOf="@+id/main_ET_password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,15 +36,14 @@
         app:layout_constraintVertical_bias="0.902" />
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/editTextPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/main_ET_password"
+        android:layout_width="@dimen/editText_width"
+        android:layout_height="@dimen/editText_height"
         android:ems="10"
         android:hint="@string/password"
         android:textColorHint="@color/hintColor"
         android:inputType="textPassword"
-        android:minHeight="@dimen/editTextHeight"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintBottom_toTopOf="@+id/main_LBL_error"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,11 +51,11 @@
         app:layout_constraintVertical_bias="0.969" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button"
+        android:id="@+id/main_BTN_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/log_in"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintBottom_toTopOf="@+id/main_BTN_createAccount"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,10 +63,10 @@
         app:layout_constraintVertical_bias="0.935" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button2"
+        android:id="@+id/main_BTN_createAccount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/create_new_account"
+        android:text="@string/create_account"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -75,12 +74,12 @@
         app:layout_constraintVertical_bias="0.837" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/textView"
+        android:id="@+id/main_LBL_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/e_mail_or_password_are_incorrect"
         android:textColor="@color/warning"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@+id/main_BTN_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
