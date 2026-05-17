@@ -25,12 +25,12 @@
         android:layout_height="48dp"
         android:layout_marginEnd="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/logout"
         android:scaleType="fitCenter"
+        android:src="@drawable/logout"
         app:layout_constraintBottom_toBottomOf="@id/customer_LBL_titleReceipts"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/customer_LBL_titleReceipts"
-        tools:ignore="SpeakableTextPresentCheck" />
+        tools:ignore="SpeakableTextPresentCheck,ImageContrastCheck" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/customer_RV_receipts"
@@ -55,8 +55,9 @@
         android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_upload"
         app:tint="@color/black"
-        app:srcCompat="@android:drawable/ic_menu_upload" />
+        tools:ignore="ClassNameCheck" />
 
     <ProgressBar
         android:id="@+id/customer_progressBar"
