@@ -1,5 +1,6 @@
 package com.example.receiptflow.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -17,11 +18,13 @@ class ReceiptAdapter(
 
     class ReceiptViewHolder(val binding: ItemReceiptBinding) : RecyclerView.ViewHolder(binding.root)
 
+    // Create the container for RecyclerView
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReceiptViewHolder {
         val binding = ItemReceiptBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ReceiptViewHolder(binding)
     }
 
+    // Bind the data to the RecyclerView
     override fun onBindViewHolder(holder: ReceiptViewHolder, position: Int) {
         val receipt = receipts[position]
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
@@ -46,8 +49,11 @@ class ReceiptAdapter(
         }
     }
 
+    // Return the number of receipts
     override fun getItemCount(): Int = receipts.size
 
+    // Update the list of receipts
+    @SuppressLint("NotifyDataSetChanged")
     fun updateData(newReceipts: List<Receipt>) {
         receipts = newReceipts
         notifyDataSetChanged()

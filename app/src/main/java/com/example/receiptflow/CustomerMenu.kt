@@ -85,6 +85,7 @@ class CustomerMenu : AppCompatActivity() {
         }
     }
 
+    // Log out of the customer
     private fun performLogout() {
         AlertDialog.Builder(this)
             .setTitle("Logout")
@@ -98,6 +99,7 @@ class CustomerMenu : AppCompatActivity() {
             .show()
     }
 
+    // Initialize the RecyclerView and its adapter
     private fun setupRecyclerView() {
         adapter = ReceiptAdapter(
             receipts = emptyList(),
@@ -107,6 +109,7 @@ class CustomerMenu : AppCompatActivity() {
         binding.customerRVReceipts.adapter = adapter
     }
 
+    // Delete alert dialog confirmation
     private fun showDeleteConfirmation(receipt: Receipt) {
         AlertDialog.Builder(this)
             .setTitle("Delete Receipt")
@@ -118,13 +121,14 @@ class CustomerMenu : AppCompatActivity() {
             .show()
     }
 
+    // Delete the receipt from firebase storage and Firestore
     private fun deleteReceipt(receipt: Receipt) {
         binding.customerProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
-            // 1. Delete from Storage
+            // Delete from Storage
             storageRepository.deleteImage(receipt.storageUrl)
             
-            // 2. Delete from Firestore
+            // Delete from Firestore
             val result = receiptRepository.deleteReceipt(receipt.id)
             
             binding.customerProgressBar.visibility = View.GONE
@@ -138,6 +142,7 @@ class CustomerMenu : AppCompatActivity() {
         }
     }
 
+    // Validate the user and retrieve the assign accountant and the receipts
     private fun fetchAccountantIdAndReceipts() {
         val uid = auth.currentUser?.uid ?: return
         binding.customerProgressBar.visibility = View.VISIBLE
@@ -153,6 +158,7 @@ class CustomerMenu : AppCompatActivity() {
         }
     }
 
+    // Fetch the receipts of the customer and update the recyclerView
     private fun fetchMyReceipts() {
         val uid = auth.currentUser?.uid ?: return
         val calendar = Calendar.getInstance()
@@ -170,6 +176,7 @@ class CustomerMenu : AppCompatActivity() {
         }
     }
 
+    // Show dialog to choose between camera or gallery for receipt upload
     private fun showImageSourceOptions() {
         val options = arrayOf("Take Photo", "Choose from Gallery")
         AlertDialog.Builder(this)
@@ -182,6 +189,7 @@ class CustomerMenu : AppCompatActivity() {
             }.show()
     }
 
+    // Check if camera permission are granted
     private fun checkCameraPermission() {
         when {
             ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED -> {
@@ -191,6 +199,7 @@ class CustomerMenu : AppCompatActivity() {
         }
     }
 
+    // Open the camera
     private fun openCamera() {
         val photoFile = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "temp_image_${System.currentTimeMillis()}.jpg")
         val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", photoFile)
@@ -198,6 +207,7 @@ class CustomerMenu : AppCompatActivity() {
         takePictureLauncher.launch(uri)
     }
 
+    // Show dialog to preview the selected image and add a comment before uploading
     private fun showUploadDialog(uri: Uri) {
         val dialogBinding = DialogUploadReceiptBinding.inflate(LayoutInflater.from(this))
         dialogBinding.uploadIMGPreview.setImageURI(uri)
@@ -212,9 +222,10 @@ class CustomerMenu : AppCompatActivity() {
             .show()
     }
 
+    // Upload the receipt image to storage and save data to Firestore
     private fun uploadReceipt(uri: Uri, comment: String) {
         val uid = auth.currentUser?.uid ?: return
-        val accId = accountantId ?: "" // In a real app, maybe block upload if no accountant is assigned
+        val accId = accountantId ?: ""
         
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)

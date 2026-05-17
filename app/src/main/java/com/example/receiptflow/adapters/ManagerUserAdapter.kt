@@ -16,12 +16,12 @@ class ManagerUserAdapter(
 ) : RecyclerView.Adapter<ManagerUserAdapter.UserViewHolder>() {
 
     class UserViewHolder(val binding: ItemManagerUserBinding) : RecyclerView.ViewHolder(binding.root)
-
+    // Create new container for RecyclerView
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val binding = ItemManagerUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return UserViewHolder(binding)
     }
-
+    // Bind the data to the RecyclerView
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = users[position]
@@ -41,9 +41,10 @@ class ManagerUserAdapter(
         holder.binding.userBTNAssign.setOnClickListener { onAssignClicked(user) }
         holder.binding.userBTNDelete.setOnClickListener { onDeleteClicked(user) }
     }
-
+    // Return the number of users
     override fun getItemCount(): Int = users.size
 
+    // Update the list of users and the accountant the assign to name
     @SuppressLint("NotifyDataSetChanged")
     fun updateData(newUsers: List<User>, newAccountantNames: Map<String, String>) {
         users = newUsers

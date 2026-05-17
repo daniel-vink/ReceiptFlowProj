@@ -10,6 +10,7 @@ class AuthManager : IAuthRepository {
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
 
+    // Register a new user to Firebase Auth and Firestore
     override suspend fun register(email: String, password: String, displayName: String, role: String): Result<Unit> {
         return try {
             val authResult = auth.createUserWithEmailAndPassword(email, password).await()
@@ -26,6 +27,7 @@ class AuthManager : IAuthRepository {
         }
     }
 
+    // Authenticate user on login and get the profile from Firestore
     override suspend fun login(email: String, password: String): Result<User> {
         return try {
             val authResult = auth.signInWithEmailAndPassword(email, password).await()
@@ -38,9 +40,11 @@ class AuthManager : IAuthRepository {
         }
     }
 
+    // Sign out the current user
     override fun logout() {
         auth.signOut()
     }
 
+    // Check if a user is currently logged in
     override fun isUserLoggedIn(): Boolean = auth.currentUser != null
 }

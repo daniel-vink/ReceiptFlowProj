@@ -52,6 +52,7 @@ class ManagerMenu : AppCompatActivity() {
         }
     }
 
+    // Log out of the manager
     private fun performLogout() {
         AlertDialog.Builder(this)
             .setTitle("Logout")
@@ -65,6 +66,7 @@ class ManagerMenu : AppCompatActivity() {
             .show()
     }
 
+    // set up recyclerView container
     private fun setupRecyclerView() {
         adapter = ManagerUserAdapter(
             users = emptyList(),
@@ -75,6 +77,7 @@ class ManagerMenu : AppCompatActivity() {
         binding.managerRVUsers.adapter = adapter
     }
 
+    // set up the tab layout to switch between customer and accountant
     private fun setupTabs() {
         binding.managerTABLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -86,10 +89,10 @@ class ManagerMenu : AppCompatActivity() {
         })
     }
 
+    // Fetch the data of the accountant and customers
     private fun fetchData() {
         binding.managerProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
-            // Always fetch accountants first to ensure names are available for mapping
             repository.getAllAccountants().onSuccess { accountants ->
                 allAccountants = accountants
                 val accMap = accountants.associate { it.uid to it.displayName }
@@ -107,8 +110,8 @@ class ManagerMenu : AppCompatActivity() {
         }
     }
 
+    // Get all accountants and show the assignment dialog for a specific customer
     private fun showAssignDialog(customer: User) {
-        // We need all accountants to populate the spinner
         if (allAccountants.isEmpty()) {
             lifecycleScope.launch {
                 repository.getAllAccountants().onSuccess { accountants ->
@@ -121,6 +124,7 @@ class ManagerMenu : AppCompatActivity() {
         }
     }
 
+    // Display the assign alerts dialog
     private fun displayAssignDialog(customer: User) {
         val dialogBinding = DialogAssignAccountantBinding.inflate(LayoutInflater.from(this))
         val accountantNames = allAccountants.map { it.displayName }
@@ -138,6 +142,7 @@ class ManagerMenu : AppCompatActivity() {
             .show()
     }
 
+    // Assign a customer to an accountant and update the UI
     private fun assignAccountant(customerId: String, accountantId: String) {
         binding.managerProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
@@ -149,6 +154,7 @@ class ManagerMenu : AppCompatActivity() {
         }
     }
 
+    // Show alert dialog for deletion confirmation
     private fun showDeleteConfirmation(user: User) {
         AlertDialog.Builder(this)
             .setTitle("Delete User")
@@ -160,6 +166,7 @@ class ManagerMenu : AppCompatActivity() {
             .show()
     }
 
+    // Delete the user from Firestore
     private fun deleteUser(user: User) {
         binding.managerProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
@@ -170,6 +177,7 @@ class ManagerMenu : AppCompatActivity() {
             binding.managerProgressBar.visibility = View.GONE
         }
     }
+
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()

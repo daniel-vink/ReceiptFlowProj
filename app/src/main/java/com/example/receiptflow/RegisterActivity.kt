@@ -36,6 +36,7 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    // Create the new user
     private fun performRegistration() {
         val name = binding.registerETFullName.text.toString().trim()
         val email = binding.registerETEmail.text.toString().trim()

@@ -27,6 +27,7 @@ class PdfGenerator(private val context: Context) {
         private const val MAX_IMAGE_HEIGHT = 600
     }
 
+    // Generate the PDF of the Receipts
     suspend fun generateReceiptsPdf(receipts: List<Receipt>, fileName: String): Result<Uri> {
         return withContext(Dispatchers.IO) {
             try {
@@ -45,7 +46,7 @@ class PdfGenerator(private val context: Context) {
                     paint.isFilterBitmap = true
                     paint.isDither = true
 
-                    // 1. Draw Text Header
+                    // Draw text title
                     paint.textSize = 18f
                     paint.isFakeBoldText = true
                     canvas.drawText("Receipt Report", 40f, 50f, paint)
@@ -56,16 +57,13 @@ class PdfGenerator(private val context: Context) {
                     canvas.drawText("Date: $dateStr", 40f, 80f, paint)
                     canvas.drawText("Status: ${receipt.status}", 40f, 100f, paint)
 
-                    // 2. Download and Draw Image
+                    // Download and draw image
                     val bitmap = downloadBitmap(receipt.storageUrl)
                     if (bitmap != null) {
-                        // NEW APPROACH: Calculate the destination rectangle
-                        // but draw the ORIGINAL high-res bitmap. This embeds the full
-                        // resolution into the PDF, which the PDF viewer scales cleanly.
                         val destRect = calculateDestRect(bitmap, 40f, 130f, MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT)
                         canvas.drawBitmap(bitmap, null, destRect, paint)
                         
-                        // 3. Draw Comment below image
+                        // Draw comment below image
                         val commentY = destRect.bottom + 30f
                         canvas.drawText("Comment:", 40f, commentY, paint)
                         paint.textSize = 14f
@@ -92,6 +90,7 @@ class PdfGenerator(private val context: Context) {
         }
     }
 
+    // Save the PDF to the public downloads folder
     private fun saveToPublicDownloads(pdfDocument: PdfDocument, fileName: String): Uri? {
         var uri: Uri? = null
         val resolver = context.contentResolver
@@ -119,6 +118,7 @@ class PdfGenerator(private val context: Context) {
         return uri
     }
 
+    // Connects to the URL and download the bitmap, needed to download the receipts images for the PDF
     private fun downloadBitmap(url: String): Bitmap? {
         return try {
             val connection = URL(url).openConnection()
@@ -131,6 +131,7 @@ class PdfGenerator(private val context: Context) {
         }
     }
 
+    // Calculates the size of image to fit into the PDF file
     private fun calculateDestRect(bitmap: Bitmap, x: Float, y: Float, maxWidth: Int, maxHeight: Int): RectF {
         val width = bitmap.width
         val height = bitmap.height

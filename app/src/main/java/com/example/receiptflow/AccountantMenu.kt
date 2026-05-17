@@ -63,6 +63,7 @@ class AccountantMenu : AppCompatActivity() {
         }
     }
 
+    // Log out from accountant
     private fun performLogout() {
         AlertDialog.Builder(this)
             .setTitle("Logout")
@@ -76,6 +77,7 @@ class AccountantMenu : AppCompatActivity() {
             .show()
     }
 
+    // Setup of the download PDF button
     private fun setupDownloadButton() {
         binding.accountantBTNDownloadPdf.setOnClickListener {
             val customerName = selectedCustomer?.displayName ?: "Customer"
@@ -94,6 +96,7 @@ class AccountantMenu : AppCompatActivity() {
         }
     }
 
+    // Set up the customer selection spinner and the receipts list
     private fun setupRecyclerViews() {
         // Customer Spinner setup
         customerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, mutableListOf())
@@ -109,7 +112,7 @@ class AccountantMenu : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        // Receipt RecyclerView setup
+        // Receipt recyclerView setup
         receiptAdapter = ReceiptAdapter(
             receipts = emptyList(),
             onReceiptClicked = { receipt -> ImageUtils.showFullImage(this, receipt.storageUrl) },
@@ -118,6 +121,7 @@ class AccountantMenu : AppCompatActivity() {
         binding.accountantRVReceipts.adapter = receiptAdapter
     }
 
+    // Alert dialog for update status on long press on receipt
     private fun showStatusUpdateDialog(receipt: Receipt) {
         val statuses = arrayOf("Image unclear", "Not relevant", "Approved")
         AlertDialog.Builder(this)
@@ -129,6 +133,7 @@ class AccountantMenu : AppCompatActivity() {
             .show()
     }
 
+    // Update the status of the receipt
     private fun updateStatus(receiptId: String, newStatus: String) {
         binding.accountantProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
@@ -143,6 +148,8 @@ class AccountantMenu : AppCompatActivity() {
         }
     }
 
+
+    // Set up the year and month selection spinners
     private fun setupSpinners() {
         val years = (2020..2030).map { it.toString() }
         val months = (1..12).map { it.toString() }
@@ -166,6 +173,7 @@ class AccountantMenu : AppCompatActivity() {
         binding.accountantSPNRMonth.onItemSelectedListener = onItemSelectedListener
     }
 
+    // Fetch the list of customers assigned to this accountant
     private fun fetchCustomers() {
         val currentUserId = auth.currentUser?.uid ?: return
         binding.accountantProgressBar.visibility = View.VISIBLE
@@ -188,6 +196,7 @@ class AccountantMenu : AppCompatActivity() {
         }
     }
 
+    // Fetch receipts for the selected customer and date range
     private fun fetchReceipts() {
         val customerId = selectedCustomer?.uid ?: return
         binding.accountantProgressBar.visibility = View.VISIBLE

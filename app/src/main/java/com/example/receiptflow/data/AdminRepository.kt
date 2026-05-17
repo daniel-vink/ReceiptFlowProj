@@ -8,6 +8,7 @@ import kotlinx.coroutines.tasks.await
 class AdminRepository : IAdminRepository {
     private val db = FirebaseFirestore.getInstance()
 
+    // Get all the accountant users from Firestore
     override suspend fun getAllAccountants(): Result<List<User>> {
         return try {
             val querySnapshot = db.collection("users")
@@ -20,6 +21,7 @@ class AdminRepository : IAdminRepository {
         }
     }
 
+    // Get all the customer users from Firestore
     override suspend fun getAllCustomers(): Result<List<User>> {
         return try {
             val querySnapshot = db.collection("users")
@@ -32,6 +34,7 @@ class AdminRepository : IAdminRepository {
         }
     }
 
+    // Assign the customer to an accountant and update in the Firestore
     override suspend fun assignCustomerToAccountant(customerId: String, accountantId: String): Result<Unit> {
         return try {
             val batch = db.batch()
@@ -47,7 +50,6 @@ class AdminRepository : IAdminRepository {
             for (doc in receiptsSnapshot.documents) {
                 batch.update(doc.reference, "accountantId", accountantId)
             }
-            
             batch.commit().await()
             Result.success(Unit)
         } catch (e: Exception) {
@@ -55,6 +57,7 @@ class AdminRepository : IAdminRepository {
         }
     }
 
+    // Delete user from Firestore
     override suspend fun deleteUser(userId: String, role: String): Result<Unit> {
         return try {
             val batch = db.batch()
@@ -86,7 +89,6 @@ class AdminRepository : IAdminRepository {
                     batch.update(doc.reference, "accountantId", null)
                 }
             }
-
             batch.commit().await()
             Result.success(Unit)
         } catch (e: Exception) {

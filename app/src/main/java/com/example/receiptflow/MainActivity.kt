@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Login to the user
     private fun performLogin() {
         val email = binding.mainETEmailAddress.text.toString().trim()
         val password = binding.mainETPassword.text.toString().trim()

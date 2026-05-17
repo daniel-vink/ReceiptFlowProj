@@ -10,6 +10,7 @@ import kotlinx.coroutines.tasks.await
 class ReceiptRepository : IReceiptRepository {
     private val db = FirebaseFirestore.getInstance()
 
+    // Get the customers that are assigned to the specified accountant
     override suspend fun getAssignedCustomers(accountantId: String): Result<List<User>> {
         return try {
             val querySnapshot = db.collection("users")
@@ -24,6 +25,7 @@ class ReceiptRepository : IReceiptRepository {
         }
     }
 
+    // Retrieve the receipts of specified customer
     override suspend fun getReceiptsForCustomer(customerId: String, year: Int, month: Int): Result<List<Receipt>> {
         return try {
             val querySnapshot = db.collection("receipts")
@@ -40,6 +42,7 @@ class ReceiptRepository : IReceiptRepository {
         }
     }
 
+    // Save receipt to Firestore in the receipts collection
     override suspend fun saveReceipt(receipt: Receipt): Result<Unit> {
         return try {
             val ref = db.collection("receipts").document()
@@ -51,6 +54,7 @@ class ReceiptRepository : IReceiptRepository {
         }
     }
 
+    // Update the status of the receipt in Firestore
     override suspend fun updateReceiptStatus(receiptId: String, newStatus: String): Result<Unit> {
         return try {
             db.collection("receipts").document(receiptId)
@@ -62,6 +66,7 @@ class ReceiptRepository : IReceiptRepository {
         }
     }
 
+    // Delete the specified receipt
     override suspend fun deleteReceipt(receiptId: String): Result<Unit> {
         return try {
             db.collection("receipts").document(receiptId).delete().await()

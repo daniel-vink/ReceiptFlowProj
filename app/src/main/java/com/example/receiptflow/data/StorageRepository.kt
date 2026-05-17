@@ -16,6 +16,7 @@ import androidx.core.graphics.scale
 class StorageRepository(private val context: Context) : IStorageRepository {
     private val storage = FirebaseStorage.getInstance()
 
+    // Upload the receipt image to Firebase Storage and return the download URL
     override suspend fun uploadReceiptImage(uri: Uri, customerId: String, year: Int, month: Int): Result<String> {
         return try {
             val compressedData = compressImage(uri) ?: throw Exception("Compression failed")
@@ -32,6 +33,7 @@ class StorageRepository(private val context: Context) : IStorageRepository {
         }
     }
 
+    // Compress the image and resize it to a maximum dimension to reduce upload size
     private fun compressImage(uri: Uri): ByteArray? {
         val inputStream = context.contentResolver.openInputStream(uri)
         var originalBitmap = BitmapFactory.decodeStream(inputStream)
@@ -61,6 +63,7 @@ class StorageRepository(private val context: Context) : IStorageRepository {
         return outputStream.toByteArray()
     }
 
+    // Rotate the image based on EXIF orientation
     private fun rotateImageIfRequired(bitmap: Bitmap, uri: Uri): Bitmap {
         val inputStream = context.contentResolver.openInputStream(uri) ?: return bitmap
         val ei = ExifInterface(inputStream)
@@ -74,12 +77,14 @@ class StorageRepository(private val context: Context) : IStorageRepository {
         }
     }
 
+    // Rotate the bitmap by the specified angle
     private fun rotateImage(source: Bitmap, angle: Float): Bitmap {
         val matrix = Matrix()
         matrix.postRotate(angle)
         return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
     }
 
+    // Delete the image from Firebase Storage using its download URL
     override suspend fun deleteImage(url: String): Result<Unit> {
         return try {
             storage.getReferenceFromUrl(url).delete().await()
