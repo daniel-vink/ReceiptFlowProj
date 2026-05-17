@@ -14,10 +14,13 @@
         android:layout_height="wrap_content"
         android:text="@string/register"
         android:textSize="30sp"
-        android:layout_marginTop="32dp"
+        app:layout_constraintBottom_toTopOf="@id/register_ET_fullName"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/register_ET_fullName"
@@ -26,7 +29,9 @@
         android:layout_marginTop="32dp"
         android:hint="@string/full_name"
         android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@id/register_ET_email"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/register_LBL_title" />
 
@@ -37,6 +42,7 @@
         android:layout_marginTop="16dp"
         android:hint="@string/e_mail"
         android:inputType="textEmailAddress"
+        app:layout_constraintBottom_toTopOf="@id/register_ET_password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/register_ET_fullName" />
@@ -48,6 +54,7 @@
         android:layout_marginTop="16dp"
         android:hint="@string/password"
         android:inputType="textPassword"
+        app:layout_constraintBottom_toTopOf="@id/register_RG_Role"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/register_ET_email" />
@@ -58,6 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/register_BTN_send"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/register_ET_password">
@@ -80,10 +88,10 @@
         android:id="@+id/register_BTN_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="136dp"
+        android:layout_marginTop="32dp"
         android:text="@string/register"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/register_RG_Role" />
 
