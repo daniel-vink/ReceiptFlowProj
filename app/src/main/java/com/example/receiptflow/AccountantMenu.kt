@@ -32,7 +32,7 @@ class AccountantMenu : AppCompatActivity() {
     
     private var selectedCustomer: User? = null
     private var selectedYear: Int = Calendar.getInstance().get(Calendar.YEAR)
-    private var selectedMonth: Int = Calendar.getInstance().get(Calendar.MONTH) + 1 // 1-based
+    private var selectedMonth: Int = Calendar.getInstance().get(Calendar.MONTH) + 1
 
     private lateinit var customerAdapter: ArrayAdapter<String>
     private var customerList: List<User> = emptyList()
